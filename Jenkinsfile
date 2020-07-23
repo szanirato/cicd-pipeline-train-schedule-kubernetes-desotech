@@ -35,16 +35,18 @@ pipeline {
             }
         }
         stage('DeployToProduction') {
-            
-            steps {
-                
-                kubernetesDeploy(
-                    kubeconfigId: 'kubeconfig',
-                    configs: 'myapp.yaml',
-                    enableConfigSubstitution: true
-                )
-                    
+            when {
+                branch 'master'
+                }
+                    steps {
+                        input 'Deploy to Production?'
+                        milestone(1)
+                        kubernetesDeploy(
+                            kubeconfigId: 'kubeconfig',
+                            configs: 'train-schedule-kube.yml',
+                            enableConfigSubstitution: true
+                    )
+                }
             }
-        }
     }
 }
